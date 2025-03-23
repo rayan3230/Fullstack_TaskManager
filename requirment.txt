@@ -1,0 +1,9 @@
+//use pyth
+pip install django djangorestframework
+pip install djangorestframework-simplejwt
+pip install psycopg2-binary
+pip install mysqlclient //using mysql for database
+pip install pipenv
+pipenv install pymysql // for sql use
+pip install cryptography
+npx create-react-app frontend // to ins
