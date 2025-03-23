@@ -7,8 +7,22 @@ from .models import Task, User
 from .serializers import TaskSerializer, UserSerializer
 
 class TaskViewSet(viewsets.ModelViewSet):
-    queryset = Task.objects.all()
     serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        # Get the user_id from the query parameters
+        user_id = self.request.query_params.get('user_id', None)
+        if user_id is not None:
+            return Task.objects.filter(user_id=user_id)
+        return Task.objects.none()  # Return empty queryset if no user_id provided
+
+    def perform_create(self, serializer):
+        # Get the user_id from the query parameters
+        user_id = self.request.query_params.get('user_id', None)
+        if user_id is not None:
+            serializer.save(user_id=user_id)
+        else:
+            raise ValueError("user_id is required to create a task")
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()

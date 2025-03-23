@@ -155,3 +155,10 @@
     color: #666;
     font-size: 14px;
   }
+
+  .field-error {
+    color: #c62828;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    padding-left: 0.5rem;
+  }

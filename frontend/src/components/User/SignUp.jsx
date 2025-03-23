@@ -11,22 +11,33 @@ const SignUp = ({onUserAdded}) => {
         email: '',
         password: ''
     });
-    const [error, setError] = useState('');
+    const [errors, setErrors] = useState({});
     const navigate = useNavigate();
+
     const handleChange = (e) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
+        });
+        // Clear error for the field being changed
+        setErrors({
+            ...errors,
+            [e.target.name]: ''
         });
     };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            console.log('Sending data:', formData);
             const response = await axios.post('http://127.0.0.1:8000/api/users/', formData);
             console.log('Success response:', response.data);
+            
+            // Store user data in localStorage
+            localStorage.setItem('user', JSON.stringify(response.data));
+            
+            // Update app state
             onUserAdded(response.data);
+            
             // Clear form
             setFormData({
                 first_name: '',
@@ -34,37 +45,34 @@ const SignUp = ({onUserAdded}) => {
                 email: '',
                 password: ''
             });
-            setError('');
+            setErrors({});
+            navigate('/tasks');
         } catch (error) {
-            console.log('Full error object:', error);
-            console.log('Error response data:', error.response?.data);
-            console.log('Error status:', error.response?.status);
+            console.log('Error response:', error.response?.data);
             
-            let errorMessage = 'Failed to create account. ';
-            if (error.response?.data) {
-                if (typeof error.response.data === 'object') {
-                    errorMessage += Object.entries(error.response.data)
-                        .map(([key, value]) => `${key}: ${value}`)
-                        .join(', ');
-                } else {
-                    errorMessage += error.response.data;
-                }
-            } else if (error.message) {
-                errorMessage += error.message;
+            const errorData = error.response?.data || {};
+            const newErrors = {};
+            
+            // Handle specific field errors
+            if (errorData.user_name) {
+                newErrors.user_name = 'This username is already taken. Please choose another one.';
             }
-            setError(errorMessage);
+            if (errorData.email) {
+                newErrors.email = 'This email is already registered. Please use a different email.';
+            }
+            
+            // If there are no specific field errors but there's a general error message
+            if (Object.keys(newErrors).length === 0 && errorData.error) {
+                newErrors.general = errorData.error;
+            }
+            
+            // If we have no specific errors, set a generic error message
+            if (Object.keys(newErrors).length === 0) {
+                newErrors.general = 'Failed to create account. Please try again.';
+            }
+            
+            setErrors(newErrors);
         }
-    };
-
-    const handleCancel = () => {
-        setFormData({
-            first_name: '',
-            user_name: '',
-            email: '',
-            password: ''
-        });
-        setError('');
-        navigate('/signin'); // Navigate to sign in page
     };
 
     return (
@@ -78,7 +86,7 @@ const SignUp = ({onUserAdded}) => {
             <div id="right">
                 <div className="auth-form">
                     <h2>Create Account</h2>
-                    {error && <div className="message error">{error}</div>}
+                    {errors.general && <div className="message error">{errors.general}</div>}
                     <form onSubmit={handleSubmit}>
                         <div className="form-group">
                             <input
@@ -99,6 +107,7 @@ const SignUp = ({onUserAdded}) => {
                                 onChange={handleChange}
                                 required
                             />
+                            {errors.user_name && <div className="field-error">{errors.user_name}</div>}
                         </div>
                         <div className="form-group">
                             <input
@@ -109,6 +118,7 @@ const SignUp = ({onUserAdded}) => {
                                 onChange={handleChange}
                                 required
                             />
+                            {errors.email && <div className="field-error">{errors.email}</div>}
                         </div>
                         <div className="form-group">
                             <input
@@ -121,7 +131,7 @@ const SignUp = ({onUserAdded}) => {
                             />
                         </div>
                         <button type="submit" className="submit-btn">Create Account</button>
-                        <button type="button" className="toggle-btn" onClick={handleCancel}>Cancel</button>
+                        <button type="button" className="toggle-btn" onClick={() => navigate('/signin')}>Cancel</button>
                         <p className="help-text">
                             Already have an account? <Link to="/signin" className="text-link">Sign In</Link>
                         </p>
