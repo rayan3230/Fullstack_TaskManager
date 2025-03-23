@@ -1,6 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from django.contrib.auth.hashers import make_password
+from rest_framework.decorators import api_view
+from django.contrib.auth.hashers import make_password, check_password
 from django.db import IntegrityError
 from .models import Task, User
 from .serializers import TaskSerializer, UserSerializer
@@ -57,3 +58,42 @@ class UserViewSet(viewsets.ModelViewSet):
                 {'error': str(e)},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+@api_view(['POST'])
+def login_user(request):
+    try:
+        username = request.data.get('username')
+        password = request.data.get('password')
+        
+        if not username or not password:
+            return Response(
+                {'error': 'Please provide both username and password'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            user = User.objects.get(user_name=username)
+        except User.DoesNotExist:
+            return Response(
+                {'error': 'Invalid username or password'},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        if not check_password(password, user.password):
+            return Response(
+                {'error': 'Invalid username or password'},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        # Create a serialized version of the user for the response
+        serializer = UserSerializer(user)
+        return Response({
+            'message': 'Login successful',
+            'user': serializer.data
+        })
+
+    except Exception as e:
+        return Response(
+            {'error': str(e)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
