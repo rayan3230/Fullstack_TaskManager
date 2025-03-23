@@ -4,12 +4,12 @@ from django.db import models
 
 class User(models.Model):
     first_name = models.CharField(max_length=70)
-    User_Name = models.CharField(max_length=70 , null=False, blank=False)
-    email = models.EmailField(max_length=30)
-    password = models.CharField(max_length=50)
+    user_name = models.CharField(max_length=70, unique=True)
+    email = models.EmailField(max_length=30, unique=True)
+    password = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.title
+        return self.email
 
 
 class Person(models.Model):

@@ -3,69 +3,108 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const Login = ({onUserAdded}) => {
-    const [firstName, setFirstName] = useState('');
-    const [userName, setUserName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [formData, setFormData] = useState({
+        first_name: '',
+        user_name: '',
+        email: '',
+        password: ''
+    });
+    const [error, setError] = useState('');
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const newUser = {  firstName, userName, email, password };
-
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/users/', newUser);
-
-        
+            console.log('Sending data:', formData);
+            const response = await axios.post('http://127.0.0.1:8000/api/users/', formData);
+            console.log('Success response:', response.data);
             onUserAdded(response.data);
-            setFirstName('');
-            setUserName('');
-            setEmail('');
-            setPassword('');
+            // Clear form
+            setFormData({
+                first_name: '',
+                user_name: '',
+                email: '',
+                password: ''
+            });
+            setError('');
         } catch (error) {
-            console.error("Error creating User:", error.response ? error.response.data : error);
+            console.log('Full error object:', error);
+            console.log('Error response data:', error.response?.data);
+            console.log('Error status:', error.response?.status);
+            
+            let errorMessage = 'Failed to create account. ';
+            if (error.response?.data) {
+                if (typeof error.response.data === 'object') {
+                    errorMessage += Object.entries(error.response.data)
+                        .map(([key, value]) => `${key}: ${value}`)
+                        .join(', ');
+                } else {
+                    errorMessage += error.response.data;
+                }
+            } else if (error.message) {
+                errorMessage += error.message;
+            }
+            setError(errorMessage);
         }
+    };
+
+    const handleCancel = () => {
+        setFormData({
+            first_name: '',
+            user_name: '',
+            email: '',
+            password: ''
+        });
+        setError('');
     };
 
     return (
         <div className="login-container">
+            <h2>Create Account</h2>
+            {error && <div className="error-message">{error}</div>}
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
+                    name="first_name"
                     placeholder="Enter Name..."
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
+                    value={formData.first_name}
+                    onChange={handleChange}
                     required
                 />
                 <input
                     type="text"
+                    name="user_name"
                     placeholder="Enter username..."
-                    value={userName}
-                    onChange={(e) => setUserName(e.target.value)}
+                    value={formData.user_name}
+                    onChange={handleChange}
                     required
                 />
                 <input
                     type="email"
+                    name="email"
                     placeholder="Enter Email..."
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={formData.email}
+                    onChange={handleChange}
                     required
                 />
                 <input
                     type="password"
+                    name="password"
                     placeholder="Enter Password..."
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    value={formData.password}
+                    onChange={handleChange}
                     required
                 />
+                <button type="submit">Create Account</button>
+                <button type="button" onClick={handleCancel}>Cancel</button>
                 <p>
-                    <a href="#" className="textbut">Forgot Password?</a>
-                </p>
-                <button type="submit">Submit</button>
-                <button type="button">Cancel</button>
-                <p>
-                    Can't sign in? Try{' '}
-                    <a href="#" className="textbut">resetting your password</a> or{' '}
-                    <a href="#" className="textbut">contact us</a> for assistance.
+                    Already have an account? <a href="/signin" className="textbut">Sign In</a>
                 </p>
             </form>
         </div>
