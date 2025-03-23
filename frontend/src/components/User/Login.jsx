@@ -1,8 +1,8 @@
-import './Login.css'; // Ensure this path is correct
+import './Login.css';
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const Login = () => {
+const Login = ({onUserAdded}) => {
     const [firstName, setFirstName] = useState('');
     const [userName, setUserName] = useState('');
     const [email, setEmail] = useState('');
@@ -10,17 +10,19 @@ const Login = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const newUser = { firstName, userName, email, password };
+        const newUser = {  firstName, userName, email, password };
 
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/User/', newUser);
-            console.log("User created:", response.data);
+            const response = await axios.post('http://127.0.0.1:8000/api/users/', newUser);
+
+        
+            onUserAdded(response.data);
             setFirstName('');
             setUserName('');
             setEmail('');
             setPassword('');
         } catch (error) {
-            console.error("Error creating User:", error);
+            console.error("Error creating User:", error.response ? error.response.data : error);
         }
     };
 

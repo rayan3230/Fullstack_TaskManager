@@ -5,7 +5,8 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register(r'tasks', views.TaskViewSet, basename='task')
-router.register(r'User', views.UserViewSet, basename='user')
+router.register(r'users', views.UserViewSet)
+
 
 
 urlpatterns = [
