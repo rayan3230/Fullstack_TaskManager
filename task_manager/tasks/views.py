@@ -1,6 +1,7 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from rest_framework import viewsets
+from .models import Task
+from .serializers import TaskSerializer
 
-# Create your views here.
-def all_user(request):
-    return HttpResponse("hmar")
+class TaskViewSet(viewsets.ModelViewSet):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer

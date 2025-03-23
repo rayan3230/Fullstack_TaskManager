@@ -1,9 +1,18 @@
-//use pyth
+//--------------------------------------------------BackEnd----------------------------------------------------//
+//use python manage.py runserver //to run server
+//use python manage.py migrate  //to make changes in the database
+//use   python manage.py makemigrations //to check if we have changes in the scripts
 pip install django djangorestframework
 pip install djangorestframework-simplejwt
 pip install psycopg2-binary
+pip install django-cors-headers
 pip install mysqlclient //using mysql for database
 pip install pipenv
 pipenv install pymysql // for sql use
 pip install cryptography
-npx create-react-app frontend // to ins
+//-----------------------------------------------------frontend----------------------------------------------------//
+// use npm start // to start server frontend
+npx create-react-app frontend // to install react
+npm install axios
+npm install @mui/material @emotion/react @emotion/styled
+
