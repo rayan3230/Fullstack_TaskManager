@@ -1,0 +1,157 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+  }
+  
+  #left, #right {
+    height: 100vh;
+  }
+  
+  #left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #222831;
+  }
+  
+  #left div {
+    width: 60%;
+    max-width: 684px;
+    background-color: #222831;
+    background-color: #222831;   
+  }   
+  
+  #right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+    padding: 20px;
+  }
+
+  .auth-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+  }
+
+  h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+  }
+
+  input:focus {
+    border-color: #2196F3;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .submit-btn:hover {
+    background-color: #1976D2;
+  }
+
+  .toggle-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: transparent;
+    color: #2196F3;
+    border: 1px solid #2196F3;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+  }
+
+  .toggle-btn:hover {
+    background-color: #e3f2fd;
+  }
+
+  .message {
+    padding: 12px;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .message.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+  }
+
+  .message.error {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ffcdd2;
+  }
+
+  .forgot-password {
+    text-align: right;
+    margin: 8px 0;
+  }
+
+  .text-link {
+    color: #2196F3;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .text-link:hover {
+    color: #1976D2;
+    text-decoration: underline;
+  }
+
+  .help-text {
+    text-align: center;
+    margin-top: 1rem;
+    color: #666;
+    font-size: 14px;
+  }
